@@ -1,0 +1,13 @@
+@import "tailwindcss";
+
+:root {
+  --background: red;
+  --foreground: red;
+}
+
+.cabecalho{
+  background-color: red;
+  color: white;
+  align-items: center;
+  justify-items: center;
+}
