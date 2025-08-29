@@ -1,0 +1,20 @@
+#Vini irá, como gerente, organizar cada Sprint
+
+#Sprint1
+1º Semana = Fazer levamento de requisitos
+- Validação por semestre
+- Definir caso de uso (geral)
+- Definir diagrama de dominio
+
+
+#Sprint2
+2º Semana = 
+
+#Sprint3
+3º Semana = 
+
+#Sprint4
+4º Semana = 
+
+#Sprint5
+5º Semana = 

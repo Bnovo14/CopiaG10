@@ -1,0 +1,11 @@
+#backend
+python com FastApi
+
+#front
+react - next
+
+#BD
+postgres
+
+#deploy
+deixar para depois
