@@ -27,7 +27,7 @@ Empates são resolvidos por **timestamp de entrada**. Doação (RB6) não permit
 
 
 ## 2. Diagrama de Casos de Uso (PlantText)
-´´´
+```
 @startuml
 left to right direction
 skinparam actorStyle awesome
@@ -92,7 +92,7 @@ Política de fila:
 Doação não quebra prioridades
 end note
 @enduml
-´´´
+```
 
 [text](https://uml.planttext.com/plantuml/png/TLJDRjim3BxhAOZkqEKGjFbFYY9ebhR03WEATTif5yvcNA6ob4boYstTmmmx53lqk2VmYusIxRJsi0H8HEhxI7uKfJFdqVeYLqBHreCtO6Lsuo6LbX8lZHRkLkeTMim14s_ijV-g2F2UdCdfnMRXA457y5q0lC7aDhEcqEdQA6FXrUKYVCEEiIdPshk87_Qkh3NtjNCQF-A7YDdWOAKARGu07SHLomrNLXehVVcJ_vynLtjGcajT-SEgSL-JlPFbeu6KuAAVerGHSn5MUunqdd8Ca7VeRVcK50fTn0LRHbE87Il5Z5hubIUTofoqvvf2EvhM77nS7mysUctqLcQ5HGitniRQNU1j2vrmmx5cSgQ0x_276tqjTMADbj_G7dr29LCEf3XzJBurDaUT6jS467O2Z481-SwQEwOnoHSEFgpN3NpKWOytUfMn7WRZIrqLUjn1JpRwGlkWJ2DifUAIkCiI6_oaWvy6_9raFCLp20gIq1uMKJwMl_Q9fXtYBBRH5Ogd5tR6oOW6gXKrj5c7Dj_eSzDYr7KsX7c7iE0yg1DIGN_iGzH_vB1yIbbTcxreimV7GLv2DZI4ky3bMP9Q9a7m2zxWcCTT7Fuxqb3-XeA7YjoEcAJuoAkgmvJ5sr3DE_GVbhM3mpXd6Cp0F-H477pezvVLCBNCOSlaAgfmpVQuRKxQvgnjpjlcGknBgnoZZZtks9EEFUlOyuxD2GxVyx5KCe6lX2fI4Y5o0vd22PoUrZlBPTYR_6zF7BxLdZBRjEtvZZytAxuF-m12QEEfVYtDjj9mPLJvv6LINKK-uHCnw8Nh9OOzkAolfXZru9pV2kdWTN936QRO4poMzK26doy5VRO8kpWBAQPS4SyUX8pYZ5VyNly5)
 
