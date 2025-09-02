@@ -236,17 +236,3 @@ end note
 **Extensões/Exceções:**
 - 2a. Há atendimentos em execução → sistema alerta e permite encerramento forçado com registro.  
 **Regras:** RB1.
-
-
-## 4. Requisitos Não Funcionais (resumo)
-- **RNF1 — Disponibilidade**: ≥ 99% em horário de expediente.
-- **RNF2 — Desempenho**: cálculo/atualização de posição em < 1s p/ 95º percentil.
-- **RNF3 — Segurança**: autenticação e autorização por papéis (Aluno/Admin).
-- **RNF4 — Observabilidade**: logs de auditoria (doação, prioridade, no-show, envio de e-mail).
-- **RNF5 — Acessibilidade**: WCAG AA nas interfaces web.
-
-## 5. Glossário
-- **TCC**: Trabalho de Conclusão de Curso.
-- **Formando**: aluno que concluirá o curso no ano corrente segundo o Sistema de Matrículas.
-- **No-show**: não comparecimento sem cancelamento prévio na janela definida.
-- **ETA**: tempo estimado de atendimento.
