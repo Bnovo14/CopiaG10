@@ -1,23 +1,19 @@
 from uuid import UUID
 from pydantic import BaseModel, EmailStr
 
-class RegisterPersonRequest(BaseModel):
-    id: UUID
+class RegisterAlunoRequest(BaseModel):
     email: EmailStr
-    name: str
     password: str
     confirm_password: str
-    #adicionar quando revisar os pré-requisitos. Montar um MER futuramente!
+    matricula: int
+    curso_id: int
+    semestre: int
+    
 
 class Token(BaseModel):
     access_token: str
     token_type: str
 
 class TokenData(BaseModel):
-    person_id: UUID
+    aluno_id: int
     email: EmailStr
-
-    def get_uuid(self) -> UUID | None:
-        if self.person_id:
-            return self.person_id
-        return None
