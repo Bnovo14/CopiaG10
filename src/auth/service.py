@@ -10,7 +10,7 @@ from . import model
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 import logging
 import os
-from exceptions import AuthenticationException, InvalidTokenException
+from src.exceptions import InvalidTokenException
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
@@ -76,6 +76,6 @@ def login_for_access_token(form_data: Annotated[OAuth2PasswordRequestForm, Depen
     user = authenticate_user(form_data.username, form_data.password, db)
     if not user:
         raise HTTPException(status_code=401, detail="Credenciais inválidas")
-    access_token = create_access_token(email=user.email, aluno_id=user.id, expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    access_token = create_access_token(email=user.email, aluno_id=user.aluno_id, expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
     return model.Token(access_token=access_token, token_type="bearer")
 

@@ -28,9 +28,21 @@ async def register_user(register_request: model.RegisterAlunoRequest, db: Sessio
         "password": register_request.password,
         "confirm_password": register_request.confirm_password
     }
-    create_aluno(model.AlunoRegisterRequest(**aluno_data), db)
+    create_aluno(model.RegisterAlunoRequest(**aluno_data), db)
     return user
 
 @router.post("/token", response_model=model.Token)
-async def login_for_access_token(form_data: OAuth2PasswordRequestForm, db: Session = Depends(get_db)) -> model.Token:
+async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)) -> model.Token:
+    return service.login_for_access_token(form_data=form_data, db=db)
+
+@router.post("/login", response_model=model.Token)
+async def login_json(login_data: model.LoginRequest, db: Session = Depends(get_db)) -> model.Token:
+    # Cria um objeto OAuth2PasswordRequestForm a partir do JSON
+    form_data = OAuth2PasswordRequestForm(
+        username=login_data.username,
+        password=login_data.password,
+        scope="",
+        client_id=None,
+        client_secret=None
+    )
     return service.login_for_access_token(form_data=form_data, db=db)

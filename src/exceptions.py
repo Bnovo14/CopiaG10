@@ -11,3 +11,7 @@ class AuthenticationException(HTTPException):
 class InvalidTokenException(HTTPException):
     def __init__(self, detail: str):
         super().__init__(status_code=401, detail=detail)
+
+class NoAccessException(HTTPException):
+    def __init__(self, detail: str):
+        super().__init__(status_code=403, detail=detail)

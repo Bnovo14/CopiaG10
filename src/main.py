@@ -1,18 +1,62 @@
 import logging
 from fastapi import APIRouter, FastAPI
-from database.core import engine
+from src.database.core import engine
 from sqlmodel import SQLModel
 from src.auth.controller import router as auth_router
+from src.alunos.controller import router as aluno_router
+from fastapi.openapi.utils import get_openapi
+# Importando todos os modelos de entidades
+from src.entities.curso import Curso
+from src.entities.aluno import Aluno
+from src.entities.agendamento import Agendamento
 
-try:
-    SQLModel.metadata.create_all(engine)
-except Exception as e:
-    logging.error(f"Error creating database tables: {e}")
+def init_db():
+    try:
+        logging.info("Creating database tables...")
+        SQLModel.metadata.create_all(engine)
+        logging.info("Database tables created successfully!")
+    except Exception as e:
+        logging.error(f"Failed to create database tables: {str(e)}")
+        raise
+
+# Initialize the database
+init_db()
 
 app = FastAPI()
-router = APIRouter("/api/v1")
-router.include_router(auth_router, prefix="/auth", tags=["auth"])
 
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    
+    openapi_schema = get_openapi(
+        title="Projeto do Sistema de Agendamento para a Máquina de Corte para FAU",
+        version="1.0.0",
+        routes=app.routes,
+    )
+    
+    # Adiciona a versão do OpenAPI
+    openapi_schema["openapi"] = "3.0.2"
+    
+    openapi_schema["components"] = {
+        "securitySchemes": {
+            "Bearer": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    }
+    openapi_schema["security"] = [{"Bearer": []}]
+    
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+app.openapi = custom_openapi
+
+router = APIRouter(prefix="/api/v1")
+router.include_router(auth_router)
+router.include_router(aluno_router)
+app.include_router(router)
 
 @app.get("/")
 def read_root():

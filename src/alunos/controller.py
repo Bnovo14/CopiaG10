@@ -1,46 +1,40 @@
-from fastapi import APIRouter, Depends, Request
-from src.database.core import get_db
-from sqlmodel import Session, update
-from exceptions import NotFoundException
+from fastapi import APIRouter, Depends, status
 from . import model
-from entities import entity
+from src.auth.model import TokenData
 from src.auth import service as auth_service
+from . import service as aluno_service
 
 router = APIRouter(
     prefix="/aluno",
     tags=["aluno"],
 )
 
-@router.get("/aluno/{aluno_id}", response_model=model.AlunoRegisterRequest)
-def get_aluno(aluno_id: int, db: Session = Depends(get_db)):
-    aluno = db.query(entity.Aluno).filter(entity.Aluno.aluno_id == aluno_id).first()
-    if not aluno:
-        raise NotFoundException("Aluno não encontrado")
-    return aluno
+@router.get("/aluno/current", status_code=status.HTTP_200_OK)
+def get_current_aluno(token_data: TokenData = Depends(auth_service.get_current_user)):
+    return {"aluno_id": token_data.aluno_id}
 
-@router.delete("/aluno/{aluno_id}")
-def delete_aluno(aluno_id: int, db: Session = Depends(get_db)):
-    aluno = db.query(entity.Aluno).filter(entity.Aluno.aluno_id == aluno_id).first()
-    if not aluno:
-        raise NotFoundException("Aluno não encontrado")
-    stmt = update(aluno).values(active=False)
-    db.execute(stmt)
-    db.commit()
-    return {"message": "Aluno deletado com sucesso"}
+@router.get("/aluno/{aluno_id}", response_model=model.AlunoRegisterRequest, status_code=status.HTTP_200_OK)
+def get_aluno(aluno_id: int, db=Depends(aluno_service.get_db)):
+    return aluno_service.get_aluno(aluno_id, db)
+
+@router.delete("/aluno/{aluno_id}", status_code=status.HTTP_204_NO_CONTENT)
+def delete_aluno(aluno_id: int, db=Depends(aluno_service.get_db)):
+    aluno_service.delete_aluno(aluno_id, db)
+    return None
+
+@router.post("/aluno", response_model=model.AlunoRegisterRequest, status_code=status.HTTP_201_CREATED)
+def create_aluno(
+    aluno: model.AlunoRegisterRequest,
+    db=Depends(aluno_service.get_db),
+    current_user=Depends(aluno_service.get_current_user)
+):
+    return aluno_service.create_aluno(aluno, db, current_user)
 
 
-
-@router.get("/aluno/current")
-def get_current_aluno(request: Request):
-    auth_header = request.headers.get("authorization")
-    if not auth_header or not auth_header.startswith("Bearer "):
-        raise NotFoundException("Token de autenticação não fornecido")
-    token = auth_header.split(" ", 1)[1]
-    user = auth_service.get_current_user(token)
-    return {"aluno_id": user.aluno_id}
-
-@router.post("/aluno", response_model=model.AlunoRegisterRequest)
-def create_aluno(aluno: model.AlunoRegisterRequest, db: Session = Depends(get_db)):
-    # Chama o método de cadastro do auth
-    novo_aluno = auth_service.register_user(db, aluno)
-    return novo_aluno
+@router.put("/aluno/{aluno_id}", response_model=model.AlunoResponse, status_code=status.HTTP_200_OK)
+def update_aluno(
+    aluno_id: int,
+    aluno: model.AlunoUpdate,
+    db=Depends(aluno_service.get_db),
+):
+    return aluno_service.update_aluno(aluno_id, aluno, db)
