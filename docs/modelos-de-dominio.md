@@ -7,188 +7,131 @@ horários, sincroniza a lista de **Formandos** via o **Sistema de Matrículas** 
 encerra o dia (reset da fila).
 ---
 ## 2. Diagrama de Classes (PlantUML)
-
-```plantuml
 @startuml
-skinparam classAttributeIconSize 0
-skinparam class {
-  BackgroundColor #FDFDFD
-  BorderColor #999999
-}
-
 class Aluno {
-  +id: UUID
-  +ra: string
-  +nome: string
-  +email: string
-  +statusPrioridade: Prioridade?
-  +ehFormando: bool
-  +ehTCCAtivo: bool
++id: UUID
++ra: string
++nome: string
++email: string
++statusPrioridade: Prioridade?
++ehFormando: bool
++ehTCCAtivo: bool
 }
-
 class Admin {
-  +id: UUID
-  +nome: string
-  +email: string
++id: UUID
++nome: string
++email: string
 }
-
 abstract class Atendimento {
-  +id: UUID
-  +situacao: SituacaoAtendimento
-  +dataCriacao: DateTime
-  +dataAtendimento: DateTime?
-  +canceladoEm: DateTime?
-  +motivoCancelamento: string?
-  +noShow: bool
-  +canalSolicitacao: Canal
-  +prioridadeEfetiva: Prioridade
++id: UUID
++situacao: SituacaoAtendimento
++dataCriacao: DateTime
++dataAtendimento: DateTime?
++canceladoEm: DateTime?
++motivoCancelamento: string?
++noShow: bool
++canalSolicitacao: Canal
++prioridadeEfetiva: Prioridade
 }
-
 class Agendamento {
-  +slotInicio: DateTime
-  +slotFim: DateTime
++slotInicio: DateTime
++slotFim: DateTime
 }
-
 class FilaDoDia {
-  +dataFila: Date
-  +posicao: int
-  +dataEntrada: DateTime
-  +dataSaida: DateTime?
++dataFila: Date
++posicao: int
++dataEntrada: DateTime
++dataSaida: DateTime?
 }
-
 class DoacaoPosicao {
-  +id: UUID
-  +dataHora: DateTime
-  +observacao: string?
++id: UUID
++dataHora: DateTime
++observacao: string?
 }
-
 class RegrasFuncionamento {
-  +id: UUID
-  +nomeCalendario: string
-  +zona: string
++id: UUID
++nomeCalendario: string
++zona: string
 }
-
 class FaixaHorario {
-  +id: UUID
-  +diaSemana: DiaSemana
-  +inicio: Time
-  +fim: Time
-  +ativo: bool
++id: UUID
++diaSemana: DiaSemana
++inicio: Time
++fim: Time
++ativo: bool
 }
-
 class Feriado {
-  +id: UUID
-  +data: Date
-  +descricao: string
++id: UUID
++data: Date
++descricao: string
 }
-
 class NotificacaoEmail {
-  +id: UUID
-  +tipo: TipoEmail
-  +enviadoEm: DateTime?
-  +statusEnvio: StatusEnvio
-  +destinatario: string
-  +assunto: string
++id: UUID
++tipo: TipoEmail
++enviadoEm: DateTime?
++statusEnvio: StatusEnvio
++destinatario: string
++assunto: string
 }
-
 class IntegracaoMatriculas {
-  +id: UUID
-  +ultimaSincronizacao: DateTime?
-  +fonte: string
-  +status: StatusIntegracao
++id: UUID
++ultimaSincronizacao: DateTime?
++fonte: string
++status: StatusIntegracao
 }
-
 enum Prioridade {
-  TCC
-  FORMANDO
-  NORMAL
+TCC
+FORMANDO
+NORMAL
 }
-
 enum SituacaoAtendimento {
-  NOVO
-  CONFIRMADO
-  EM_ATENDIMENTO
-  CONCLUIDO
-  CANCELADO
+NOVO
+CONFIRMADO
+EM_ATENDIMENTO
+CONCLUIDO
+CANCELADO
 }
-
 enum Canal {
-  WEB
-  PRESENCIAL
+WEB
+PRESENCIAL
 }
-
 enum DiaSemana {
-  SEG
-  TER
-  QUA
-  QUI
-  SEX
-  SAB
-  DOM
+SEG
+TER
+QUA
+QUI
+SEX
+SAB
+DOM
 }
-
 enum TipoEmail {
-  CONF_AGENDAMENTO
-  CONF_FILA
-  LEMBRETE
-  FALHA_ENVIO
+CONF_AGENDAMENTO
+CONF_FILA
+LEMBRETE
+FALHA_ENVIO
 }
-
 enum StatusEnvio {
-  PENDENTE
-  ENVIADO
-  FALHA
+PENDENTE
+ENVIADO
+FALHA
 }
-
 enum StatusIntegracao {
-  OK
-  FALHA
-  PARCIAL
+OK
+FALHA
+PARCIAL
 }
-
 Atendimento <|-- Agendamento
 Atendimento <|-- FilaDoDia
-
 Aluno "1" -- "0..*" Atendimento : solicita
-Agendamento "1" -- "1" FaixaHorario : reserva
-FilaDoDia "1" -- "1" RegrasFuncionamento : valida
-RegrasFuncionamento "1" -- "1..*" FaixaHorario : contém
-RegrasFuncionamento "1" -- "0..*" Feriado : contém
-Atendimento "1" -- "0..*" NotificacaoEmail : gera
-Admin "1" -- "1" RegrasFuncionamento : configura
-Admin "1" -- "0..*" DoacaoPosicao : audita
-DoacaoPosicao "1" -- "1" FilaDoDia : origem
-DoacaoPosicao "1" -- "1" FilaDoDia : destino
-IntegracaoMatriculas "1" -- "0..*" Aluno : marca Formando
-Admin "1" -- "1" IntegracaoMatriculas : opera/sincroniza
-
-note right of Prioridade
-  TCC > FORMANDO > NORMAL
-end note
-
-note right of SituacaoAtendimento
-  NOVO, CONFIRMADO, EM_ATENDIMENTO,
-  CONCLUIDO, CANCELADO
-end note
-
-note right of Canal
-  WEB, PRESENCIAL
-end note
-
-note right of DiaSemana
-  SEG a DOM
-end note
-
-note right of TipoEmail
-  CONF_AGENDAMENTO, CONF_FILA,
-  LEMBRETE, FALHA_ENVIO
-end note
-
-note right of StatusEnvio
-  PENDENTE, ENVIADO, FALHA
-end note
-
-note right of StatusIntegracao
-  OK, FALHA, PARCIAL
-end note
+Agendamento "1" -- "1" FaixaHorario : reserva >
+FilaDoDia "1" -- "1" RegrasFuncionamento : valida >
+RegrasFuncionamento "1" -- "1..*" FaixaHorario : contém >
+RegrasFuncionamento "1" -- "0..*" Feriado : contém >
+Atendimento "1" -- "0..*" NotificacaoEmail : gera >
+Admin "1" -- "1" RegrasFuncionamento : configura >
+Admin "1" -- "0..*" DoacaoPosicao : audita >
+DoacaoPosicao "1" -- "1" FilaDoDia : origem >
+DoacaoPosicao "1" -- "1" FilaDoDia : destino >
+IntegracaoMatriculas "1" -- "0..*" Aluno : marca Formando >
+Admin "1" -- "1" IntegracaoMatriculas : opera/sincroniza >
 @enduml
