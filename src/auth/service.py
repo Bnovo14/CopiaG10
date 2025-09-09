@@ -11,6 +11,7 @@ from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 import logging
 import os
 from src.exceptions import InvalidTokenException
+from src.entities.aluno import Aluno as AlunoEntity
 
 SECRET_KEY = os.getenv("SECRET_KEY")
 ALGORITHM = "HS256"
@@ -48,13 +49,20 @@ def verify_token(token: str) -> model.TokenData:
         logging.error(f"Erro ao decodificar o token: {e}")
         raise InvalidTokenException("Erro ao decodificar o token")
 
-#Modificar posteriormente
 def register_user(db: Session, register_request) -> Aluno:
-    from src.entities.aluno import Aluno as AlunoEntity
     try:
+        existing_email = db.query(AlunoEntity).filter(AlunoEntity.email == register_request.email).first()
+        if existing_email:
+            raise HTTPException(status_code=400, detail="Email já cadastrado")
+            
+        matricula_str = str(register_request.matricula)
+        existing_matricula = db.query(AlunoEntity).filter(AlunoEntity.matricula == matricula_str).first()
+        if existing_matricula:
+            raise HTTPException(status_code=400, detail="Matrícula já cadastrada")
+            
         hashed_password = get_password_hash(register_request.password)
         new_user = AlunoEntity(
-            matricula=register_request.matricula,
+            matricula=matricula_str,
             email=register_request.email,
             curso_id=register_request.curso_id,
             semestre=register_request.semestre,
@@ -63,10 +71,12 @@ def register_user(db: Session, register_request) -> Aluno:
         db.add(new_user)
         db.commit()
         db.refresh(new_user)
+    except HTTPException:
+        raise
     except Exception as e:
         logging.error(f"Erro ao registrar usuário: {e}")
         db.rollback()
-        raise
+        raise HTTPException(status_code=500, detail="Erro ao registrar usuário")
     return new_user
 
 def get_current_user(token: Annotated[str, Depends(oauth2_bearer)]) -> model.TokenData:

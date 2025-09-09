@@ -3,8 +3,8 @@ from sqlmodel import SQLModel, Field
 
 class Aluno(SQLModel, table=True):
     aluno_id: int = Field(default=None, primary_key=True)
-    matricula: str = Field(default=None)
-    email: str = Field(default=None)
+    matricula: str = Field(default=None, unique=True)
+    email: str = Field(default=None, unique=True)
     curso_id: int = Field(default=None)
     semestre: int = Field(default=None)
     doing_tcc: bool = Field(default=False)

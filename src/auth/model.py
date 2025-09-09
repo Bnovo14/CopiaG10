@@ -11,6 +11,20 @@ class RegisterAlunoRequest(BaseModel):
     matricula: int
     curso_id: int
     semestre: int
+    doing_tcc: bool = False
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "email": "aluno@example.com",
+                "password": "senha123",
+                "confirm_password": "senha123",
+                "matricula": 123456,
+                "curso_id": 1,
+                "semestre": 5,
+                "doing_tcc": False
+            }
+        }
     
 
 class Token(BaseModel):

@@ -9,18 +9,15 @@ from ..rate_limiting import limiter
 
 router = APIRouter(
     prefix="/auth",
-    tags=["auth"]
+    tags=["Authentication"]
 )
 
 
 # @limiter.limit("5/minute") para limitar o número de registros (controle de DDoS)
 @router.post("/", status_code=status.HTTP_201_CREATED)
 async def register_user(register_request: model.RegisterAlunoRequest, db: Session = Depends(get_db)):
-    # Cria autenticação
-    user = service.register_user(db=db, register_request=register_request)
-    # Cria aluno
     aluno_data = {
-        "matricula": register_request.matricula,
+        "matricula": str(register_request.matricula),  # Convert matricula to string
         "curso_id": register_request.curso_id,
         "semestre": register_request.semestre,
         "doing_tcc": getattr(register_request, "doing_tcc", False),
@@ -28,7 +25,7 @@ async def register_user(register_request: model.RegisterAlunoRequest, db: Sessio
         "password": register_request.password,
         "confirm_password": register_request.confirm_password
     }
-    create_aluno(model.RegisterAlunoRequest(**aluno_data), db)
+    user =create_aluno(model.RegisterAlunoRequest(**aluno_data), db)
     return user
 
 @router.post("/token", response_model=model.Token)
