@@ -7,6 +7,7 @@ horários, sincroniza a lista de **Formandos** via o **Sistema de Matrículas** 
 encerra o dia (reset da fila).
 ---
 ## 2. Diagrama de Classes (Mermaid)
+```
 @startuml
 skinparam classAttributeIconSize 0
 skinparam class {
@@ -162,3 +163,4 @@ DoacaoPosicao "1" -- "1" FilaDoDia : destino
 IntegracaoMatriculas "1" -- "0..*" Aluno : marca Formando
 Admin "1" -- "1" IntegracaoMatriculas : opera/sincroniza
 @enduml
+´´´
