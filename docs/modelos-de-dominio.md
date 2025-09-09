@@ -6,7 +6,9 @@ O sistema permite que **Alunos** solicitem **Atendimentos** por
 horários, sincroniza a lista de **Formandos** via o **Sistema de Matrículas** e
 encerra o dia (reset da fila).
 ---
-## 2. Diagrama de Classes (Mermaid)
+## 2. Diagrama de Classes (PlantUML)
+
+```plantuml
 @startuml
 skinparam classAttributeIconSize 0
 skinparam class {
@@ -144,11 +146,9 @@ enum StatusIntegracao {
   PARCIAL
 }
 
-' Generalizações
 Atendimento <|-- Agendamento
 Atendimento <|-- FilaDoDia
 
-' Associações principais
 Aluno "1" -- "0..*" Atendimento : solicita
 Agendamento "1" -- "1" FaixaHorario : reserva
 FilaDoDia "1" -- "1" RegrasFuncionamento : valida
@@ -162,7 +162,6 @@ DoacaoPosicao "1" -- "1" FilaDoDia : destino
 IntegracaoMatriculas "1" -- "0..*" Aluno : marca Formando
 Admin "1" -- "1" IntegracaoMatriculas : opera/sincroniza
 
-' Notas para enums
 note right of Prioridade
   TCC > FORMANDO > NORMAL
 end note
@@ -192,3 +191,4 @@ end note
 note right of StatusIntegracao
   OK, FALHA, PARCIAL
 end note
+@enduml
