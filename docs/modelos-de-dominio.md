@@ -118,6 +118,7 @@ note for TipoEmail "CONF_AGENDAMENTO, CONF_FILA, LEMBRETE, FALHA_ENVIO"
 note for StatusEnvio "PENDENTE, ENVIADO, FALHA"
 note for StatusIntegracao "OK, FALHA, PARCIAL"
 Modelo de domínio, código .puml
+´´´
 @startuml
 skinparam classAttributeIconSize 0
 skinparam class {
