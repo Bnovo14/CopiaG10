@@ -137,4 +137,5 @@ IntegracaoMatriculas "1" -- "0..*" Aluno : marca Formando >
 Admin "1" -- "1" IntegracaoMatriculas : opera/sincroniza >
 
 @enduml
-``
+```
+
