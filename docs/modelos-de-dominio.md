@@ -7,6 +7,7 @@ horários, sincroniza a lista de **Formandos** via o **Sistema de Matrículas** 
 encerra o dia (reset da fila).
 ---
 ## 2. Diagrama de Classes (PlantUML)
+```plantuml
 @startuml
 class Aluno {
 +id: UUID
@@ -134,4 +135,6 @@ DoacaoPosicao "1" -- "1" FilaDoDia : origem >
 DoacaoPosicao "1" -- "1" FilaDoDia : destino >
 IntegracaoMatriculas "1" -- "0..*" Aluno : marca Formando >
 Admin "1" -- "1" IntegracaoMatriculas : opera/sincroniza >
+
 @enduml
+``
