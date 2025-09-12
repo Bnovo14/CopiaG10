@@ -5,7 +5,6 @@ from src.auth import service as auth_service
 from . import service as aluno_service
 
 router = APIRouter(
-    prefix="/aluno",
     tags=["aluno"],
 )
 
@@ -36,5 +35,6 @@ def update_aluno(
     aluno_id: int,
     aluno: model.AlunoUpdate,
     db=Depends(aluno_service.get_db),
+    current_user=Depends(aluno_service.get_current_user),
 ):
-    return aluno_service.update_aluno(aluno_id, aluno, db)
+    return aluno_service.update_aluno(aluno_id, aluno, db, current_user)

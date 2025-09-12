@@ -1,3 +1,4 @@
+from typing import Optional
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
 
@@ -24,13 +25,13 @@ class AlunoResponse(BaseModel):
     semestre: int
     email: EmailStr
     active: bool
-    created_at: datetime
-    updated_at: datetime
+    created_at: Optional[datetime]
+    updated_at: Optional[datetime]
 
 class AlunoUpdate(BaseModel):
-    matricula: int | None = None
-    curso_id: int | None = None
-    semestre: int | None = None
-    doing_tcc: bool | None = None
-    email: EmailStr | None = None
-    active: bool | None = None
+    matricula: Optional[int] = None
+    curso_id: Optional[int] = None
+    semestre: Optional[int] = None
+    doing_tcc: Optional[bool] = None
+    email: Optional[EmailStr] = None
+    active: Optional[bool] = None

@@ -6,6 +6,7 @@ from src.database.core import engine
 from sqlmodel import SQLModel
 from src.auth.controller import router as auth_router
 from src.alunos.controller import router as aluno_router
+from src.agendamentos.controller import router as agendamento_router
 from fastapi.openapi.utils import get_openapi
 # Importando todos os modelos de entidades
 from src.entities.curso import Curso
@@ -33,8 +34,6 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
         content={"detail": exc.errors()}
     )
 
-# Criar router principal para versão da API
-api_v1 = APIRouter(prefix="/api/v1")
 
 def custom_openapi():
     if app.openapi_schema:
@@ -49,74 +48,16 @@ def custom_openapi():
     # Adiciona a versão do OpenAPI
     openapi_schema["openapi"] = "3.0.2"
     
-    # Adiciona os schemas
-    from src.auth.model import RegisterAlunoRequest, LoginRequest, Token
-    
-    openapi_schema["components"] = {
-        "schemas": {
-            "RegisterAlunoRequest": {
-                "title": "RegisterAlunoRequest",
-                "type": "object",
-                "required": ["email", "password", "confirm_password", "matricula", "curso_id", "semestre"],
-                "properties": {
-                    "email": {"title": "Email", "type": "string", "format": "email"},
-                    "password": {"title": "Password", "type": "string"},
-                    "confirm_password": {"title": "Confirm Password", "type": "string"},
-                    "matricula": {"title": "Matricula", "type": "integer"},
-                    "curso_id": {"title": "Curso ID", "type": "integer"},
-                    "semestre": {"title": "Semestre", "type": "integer"},
-                    "doing_tcc": {"title": "Doing TCC", "type": "boolean", "default": False}
-                }
-            },
-            "HTTPValidationError": {
-                "title": "HTTPValidationError",
-                "type": "object",
-                "properties": {
-                    "detail": {
-                        "title": "Detail",
-                        "type": "array",
-                        "items": {
-                            "$ref": "#/components/schemas/ValidationError"
-                        }
-                    }
-                }
-            },
-            "ValidationError": {
-                "title": "ValidationError",
-                "type": "object",
-                "required": ["loc", "msg", "type"],
-                "properties": {
-                    "loc": {
-                        "title": "Location",
-                        "type": "array",
-                        "items": {
-                            "anyOf": [
-                                {"type": "string"},
-                                {"type": "integer"}
-                            ]
-                        }
-                    },
-                    "msg": {
-                        "title": "Message",
-                        "type": "string"
-                    },
-                    "type": {
-                        "title": "Error Type",
-                        "type": "string"
-                    }
-                }
-            }
-        },
-        "securitySchemes": {
-            "Bearer": {
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT"
-            }
+    # Adiciona apenas o securitySchemes, mantendo os schemas automáticos
+    openapi_schema.setdefault("components", {})
+    openapi_schema["components"]["securitySchemes"] = {
+        "Bearer": {
+            "type": "http",
+            "scheme": "bearer",
+            "bearerFormat": "JWT"
         }
     }
     openapi_schema["security"] = [{"Bearer": []}]
-    
     app.openapi_schema = openapi_schema
     return app.openapi_schema
 
@@ -125,12 +66,9 @@ app.openapi = custom_openapi
 router = APIRouter(prefix="/api/v1")
 router.include_router(auth_router)
 router.include_router(aluno_router)
-# Incluir routers na versão v1 da API
-api_v1.include_router(auth_router)
-api_v1.include_router(aluno_router)
+router.include_router(agendamento_router)
 
-# Incluir router v1 no app principal
-app.include_router(api_v1)
+app.include_router(router)
 
 # Configurar schema OpenAPI customizado
 app.openapi = custom_openapi

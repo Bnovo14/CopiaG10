@@ -27,7 +27,7 @@ def delete_aluno(aluno_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"message": "Aluno deletado com sucesso"}
 
-def get_aluno(aluno_id: int, db: Session = Depends(get_db)):
+def get_aluno(db: Session, aluno_id: int):
     aluno = db.query(Aluno).filter(Aluno.aluno_id == aluno_id).first()
     if not aluno:
         raise NotFoundException("Aluno não encontrado")
@@ -42,13 +42,15 @@ def create_aluno(
     return novo_aluno
 
 def update_aluno(
-        aluno_id:int,
+        aluno_id: int,
         aluno: model.AlunoUpdate,
-        db: Session = Depends(get_db)
+        db: Session = Depends(get_db),
+        current_user = Depends(get_current_user)
 ):
-    current_id = get_current_user()
-    current_user = db.query(Aluno).filter(Aluno.aluno_id == current_id.aluno_id).first()
-    if current_id.aluno_id != aluno_id and not current_user.admin:
+    from src.auth.model import TokenData
+    current_id: TokenData = current_user
+    user_db = db.query(Aluno).filter(Aluno.aluno_id == current_id.aluno_id).first()
+    if current_id.aluno_id != aluno_id and not (user_db and user_db.admin):
         raise NoAccessException("Você não tem permissão para atualizar este aluno")
     aluno_to_update = db.query(Aluno).filter(Aluno.aluno_id == aluno_id).first()
     if not aluno_to_update:
