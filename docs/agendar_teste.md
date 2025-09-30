@@ -13,9 +13,9 @@ Este documento detalha os cenários de teste para o caso de uso "UC04 - Agendar 
 | **CT-003** | Falha ao agendar com data de início posterior à de término | Alta       | -                |
 | **CT-004** | Falha ao agendar por um aluno não existente | Média      | -                |
 | **CT-005** | Falha ao agendar em um horário já ocupado | Alta       | -                |
-| **CT-006** | **(Novo)** Agendamento bem-sucedido (Aluno Prioritário - TCC) | Alta       | RB3, RB5         |
-| **CT-007** | **(Novo)** Falha ao agendar fora do horário de funcionamento | Alta       | RB2              |
-| **CT-008** | **(Novo)** Validação de envio de e-mail após agendamento | Alta       | RB5, UC06        |
+| **CT-006** | Agendamento bem-sucedido (Aluno Prioritário - TCC) | Alta       | RB3, RB5         |
+| **CT-007** | Falha ao agendar fora do horário de funcionamento | Alta       | RB2              |
+| **CT-008** | Validação de envio de e-mail após agendamento | Alta       | RB5, UC06        |
 
 ---
 
@@ -75,3 +75,4 @@ Este documento detalha os cenários de teste para o caso de uso "UC04 - Agendar 
         1.  Executar os passos do cenário de sucesso `CT-001`.
     * **Resultado Esperado:**
         * Após o sistema retornar `HTTP 201 Created`, deve ser possível verificar no log do serviço de e-mail (ou no mock) que uma requisição de envio foi feita para o e-mail de `ana.souza`, contendo os dados corretos do agendamento (data, hora).
+
